@@ -1,2 +1,2 @@
-# magmaficator-bot
+# magmafier-bot
 Telegram bot
