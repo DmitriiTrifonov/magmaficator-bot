@@ -89,16 +89,14 @@ func main() {
 				baCipher = append(baCipher, bArr[:]...)
 				baCipher = append(baCipher, aArr[:]...)
 
-				log.Println("baCipher:", baCipher)
-
 				rgCipher = mgm.Encrypt(rgCipher)
 				baCipher = mgm.Encrypt(baCipher)
 
 				var rgArr, baArr [8]byte
 				copy(rgArr[:], rgCipher)
 				copy(baArr[:], baCipher)
-				newR, newG := convertToUInt32(&rgArr)
-				newB, newA := convertToUInt32(&baArr)
+				_, newG := convertToUInt32(&rgArr)
+				newB, _ := convertToUInt32(&baArr)
 
 				mod.Set(i, j, color.RGBA64{
 					R: uint16(r),
