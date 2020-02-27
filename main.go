@@ -31,7 +31,7 @@ func main() {
 	})
 
 	b.Handle(tb.OnPhoto, func(m *tb.Message) {
-		photo := m.Photo.File
+		photo := m.Photo
 		_, _ = b.Send(m.Sender, photo)
 	})
 
