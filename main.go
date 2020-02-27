@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	tb "gopkg.in/tucnak/telebot.v2"
 	"log"
 	"os"
@@ -48,9 +47,12 @@ func main() {
 	b.Handle(tb.OnPhoto, func(m *tb.Message) {
 		caption := m.Caption
 		log.Println(caption)
-		photo := m.Photo.File
-		jsn, _ := json.Marshal(photo)
-		log.Println(string(jsn))
+		photoUrl := m.Photo.File.FileID
+		url, err := b.FileURLByID(photoUrl)
+		if err != nil {
+			_, _ = b.Send(m.Sender, "Cannot process the photo")
+		}
+		log.Println(url)
 		_, _ = b.Send(m.Sender, caption)
 	})
 
