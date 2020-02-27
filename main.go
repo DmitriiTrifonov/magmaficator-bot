@@ -32,8 +32,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	message := "This is the Mamgafier bot.\n" +
-		"It uses block cipher \"Mamga\" from GOST 34.12-2018.\n" +
+	message := "This is the Magmafier bot.\n" +
+		"It uses block cipher \"Magma\" from GOST 34.12-2018.\n" +
 		"It's only ciphering green and blue channels for entertainment purposes.\n" +
 		"If you want to set a custom key please add a message to your photo\n" +
 		"Have fun! This was a theme for my thesis."
@@ -72,20 +72,19 @@ func main() {
 
 				var rArr [4]byte
 				convertToArray(r, &rArr)
-				log.Println("rArr:", rArr)
 				var gArr [4]byte
 				convertToArray(g, &gArr)
-				log.Println("gArr:", gArr)
+				
 				rgCipher := make([]byte, 0)
 				rgCipher = append(rgCipher, rArr[:]...)
 				rgCipher = append(rgCipher, gArr[:]...)
 
-				log.Println("rgCipher:", rgCipher)
 
 				var bArr [4]byte
 				convertToArray(b, &bArr)
 				var aArr [4]byte
 				convertToArray(a, &aArr)
+				
 				baCipher := make([]byte, 0)
 				baCipher = append(baCipher, bArr[:]...)
 				baCipher = append(baCipher, aArr[:]...)
@@ -95,16 +94,12 @@ func main() {
 				rgCipher = mgm.Encrypt(rgCipher)
 				baCipher = mgm.Encrypt(baCipher)
 
-				log.Println("rgCipher:", rgCipher)
-				log.Println("baCipher:", baCipher)
-
 				var rgArr, baArr [8]byte
 				copy(rgArr[:], rgCipher)
 				copy(baArr[:], baCipher)
 				newR, newG := convertToUInt32(&rgArr)
 				newB, newA := convertToUInt32(&baArr)
-				log.Println(r, g, b, a)
-				log.Println(newR, newG, newB, newA)
+
 				mod.Set(i, j, color.RGBA64{
 					R: uint16(r),
 					G: uint16(newG * g),
