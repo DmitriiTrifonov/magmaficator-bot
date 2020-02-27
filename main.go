@@ -45,9 +45,9 @@ func main() {
 	})
 
 	b.Handle(tb.OnPhoto, func(m *tb.Message) {
-		photo := m.Caption
-		log.Println(photo)
-		_, _ = b.Send(m.Sender, len(photo))
+		caption := m.Caption
+		log.Println(caption)
+		_, _ = b.Send(m.Sender, caption)
 	})
 
 	b.Handle(tb.OnText, func(m *tb.Message) {
