@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	tb "gopkg.in/tucnak/telebot.v2"
 	"log"
 	"os"
@@ -48,7 +49,8 @@ func main() {
 		caption := m.Caption
 		log.Println(caption)
 		photo := m.Photo.File
-		log.Println(photo)
+		jsn, _ := json.Marshal(photo)
+		log.Println(string(jsn))
 		_, _ = b.Send(m.Sender, caption)
 	})
 
