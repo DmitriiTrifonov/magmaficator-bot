@@ -58,10 +58,11 @@ func main() {
 		url, err := b.FileURLByID(photoUrl)
 		log.Println(url)
 		resp, err := http.Get(url)
+		log.Println(resp)
 		img, _, err := image.Decode(resp.Body)
+		err = resp.Body.Close()
 		x := img.Bounds().Dx()
 		y := img.Bounds().Dy()
-		err = resp.Body.Close()
 		mod := image.NewRGBA(image.Rect(0, 0, x, y))
 		for i := 0; i < x; i++ {
 			for j := 0; j < y; j++ {
