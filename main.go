@@ -26,8 +26,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	b.Start()
-
 	b.Handle("/start", func(m *tb.Message) {
 		_, _ = b.Send(m.Sender, "Henlo!")
 	})
@@ -35,5 +33,7 @@ func main() {
 	b.Handle("/hello", func(m *tb.Message) {
 		_, _ = b.Send(m.Sender, "Henlo!")
 	})
+
+	b.Start()
 
 }
