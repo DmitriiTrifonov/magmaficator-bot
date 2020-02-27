@@ -27,11 +27,12 @@ func main() {
 	}
 
 	b.Handle("/start", func(m *tb.Message) {
-		_, _ = b.Send(m.Sender, "Henlo!")
+		_, _ = b.Send(m.Sender, "This is the Mamgafier bot.\n It uses block cipher \"Mamga\" from GOST  ")
 	})
 
-	b.Handle("/hello", func(m *tb.Message) {
-		_, _ = b.Send(m.Sender, "Henlo!")
+	b.Handle(tb.OnPhoto, func(m *tb.Message) {
+		photo := m.Photo.File
+		_, _ = b.Send(m.Sender, photo)
 	})
 
 	b.Start()
