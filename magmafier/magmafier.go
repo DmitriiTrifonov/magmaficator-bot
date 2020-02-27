@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func makeKeyFromString(s string) []byte {
+func MakeKeyFromString(s string) []byte {
 	rand.Seed(time.Now().UnixNano())
 	b := make([]byte, 32)
 	if s == "" {
