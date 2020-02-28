@@ -69,8 +69,8 @@ func main() {
 		y := img.Bounds().Dy()
 		mod := image.NewRGBA(image.Rect(0, 0, x, y))
 		counter := ctr.Vector
-		for i := 0; i < x; i++ {
-			for j := 0; j < y; j++ {
+		for i := x - 1; i > 0; i-- {
+			for j := y - 1; j > 0; j-- {
 				col := img.At(i, j)
 				r, g, b, _ := col.RGBA()
 
