@@ -111,17 +111,20 @@ func main() {
 		}
 		keyFile := fmt.Sprintf("%x", key)
 		outFile, err := os.Create(keyFile+".jpg")
-
-		defer outFile.Close()
+		log.Println("File created:", outFile)
+		
 		png.Encode(outFile, mod)
+		
 
 		if err != nil {
 			_, _ = b.Send(m.Sender, "Cannot process the photo")
 		}
 
-		p := &tb.Photo{File: tb.FromDisk(keyFile+".jpg"), Caption: "Key: "+fmt.Sprintf("%s", key)}
+		p := &tb.Photo{File: tb.FromDisk(keyFile+".jpg"), Caption: fmt.Sprintf("%s", key)}
 		_, _ = b.Send(m.Sender, p)
+		outFile.Close()
 		os.Remove(keyFile+".jpg")
+		log.Println("File deleted:", keyFile+".jpg")
 	})
 
 	b.Start()
