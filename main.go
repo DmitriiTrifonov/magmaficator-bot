@@ -68,9 +68,9 @@ func main() {
 		x := img.Bounds().Dx()
 		y := img.Bounds().Dy()
 		mod := image.NewRGBA(image.Rect(0, 0, x, y))
-		counter := ctr.Vector
-		for i := x - 1; i > 0; i-- {
-			for j := y - 1; j > 0; j-- {
+		//counter := ctr.Vector
+		for i := 0; i < x; i++ {
+			for j := 0; j < y; j++ {
 				col := img.At(i, j)
 				r, g, b, _ := col.RGBA()
 
@@ -87,16 +87,16 @@ func main() {
 				block = append(block, gb...)
 				block = append(block, bb...)
 
-				cipher := ctr.CTRCrypt(block, counter, mgm)
+				//cipher := ctr.CTRCrypt(block, counter, &mgm)
 
-				newR16, _ := btoui16(cipher[0:2])
-				newG16, _ := btoui16(cipher[2:4])
-				newB16, _ := btoui16(cipher[4:6])
+				//newR16, _ := btoui16(cipher[0:2])
+				//newG16, _ := btoui16(cipher[2:4])
+				//newB16, _ := btoui16(cipher[4:6])
 
 				mod.Set(i, j, color.RGBA64{
-					R: newR16,
-					G: newG16,
-					B: newB16,
+					R: uint16(r),
+					G: uint16(g),
+					B: uint16(b),
 					A: 65535,
 				})
 			}

@@ -28,7 +28,7 @@ func xor(a []byte, b []byte) []byte {
 	return s
 }
 
-func CTRCrypt(blk []byte, ctr []byte, mgm magmafier.Magma) []byte {
+func CTRCrypt(blk []byte, ctr []byte, mgm *magmafier.Magma) []byte {
 	c := mgm.Encrypt(ctr)
 	incCtr(ctr)
 	c = xor(c, blk)
