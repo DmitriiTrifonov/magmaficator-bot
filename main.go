@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/DmitriiTrifonov/magmafier-bot/ctr"
 	"github.com/DmitriiTrifonov/magmafier-bot/magmafier"
 	tb "gopkg.in/tucnak/telebot.v2"
 	"image"
@@ -67,43 +68,36 @@ func main() {
 		x := img.Bounds().Dx()
 		y := img.Bounds().Dy()
 		mod := image.NewRGBA(image.Rect(0, 0, x, y))
+		counter := ctr.Vector
 		for i := 0; i < x; i++ {
 			for j := 0; j < y; j++ {
-				c := img.At(i, j)
-				r, g, b, a := c.RGBA()
+				col := img.At(i, j)
+				r, g, b, _ := col.RGBA()
 
-				var rArr [4]byte
-				convertToArray(r, &rArr)
-				var gArr [4]byte
-				convertToArray(g, &gArr)
+				r16 := uint16(r)
+				g16 := uint16(g)
+				b16 := uint16(b)
 
-				rgCipher := make([]byte, 0)
-				rgCipher = append(rgCipher, rArr[:]...)
-				rgCipher = append(rgCipher, gArr[:]...)
+				rb := ui16tob(r16)
+				gb := ui16tob(g16)
+				bb := ui16tob(b16)
 
-				var bArr [4]byte
-				convertToArray(b, &bArr)
-				var aArr [4]byte
-				convertToArray(a, &aArr)
+				block := make([]byte, 0)
+				block = append(block, rb...)
+				block = append(block, gb...)
+				block = append(block, bb...)
 
-				baCipher := make([]byte, 0)
-				baCipher = append(baCipher, bArr[:]...)
-				baCipher = append(baCipher, aArr[:]...)
+				cipher := ctr.CTRCrypt(block, counter, mgm)
 
-				rgCipher = mgm.Encrypt(rgCipher)
-				baCipher = mgm.Encrypt(baCipher)
-
-				var rgArr, baArr [8]byte
-				copy(rgArr[:], rgCipher)
-				copy(baArr[:], baCipher)
-				_, newG := convertToUInt32(&rgArr)
-				newB, _ := convertToUInt32(&baArr)
+				newR16, _ := btoui16(cipher[0:2])
+				newG16, _ := btoui16(cipher[2:4])
+				newB16, _ := btoui16(cipher[4:6])
 
 				mod.Set(i, j, color.RGBA64{
-					R: uint16(r),
-					G: uint16(newG * g),
-					B: uint16(newB * b),
-					A: uint16(a),
+					R: newR16,
+					G: newG16,
+					B: newB16,
+					A: 65535,
 				})
 			}
 		}
@@ -128,24 +122,24 @@ func main() {
 
 }
 
-func convertToUInt32(a *[8]byte) (uint32, uint32) {
-	var r, r2 uint32
-	for i := 0; i < 3; i++ {
-		r |= uint32(a[i])
-		r <<= 8
-	}
-	r |= uint32(a[3])
-	for i := 4; i < 7; i++ {
-		r2 |= uint32(a[i])
-		r2 <<= 8
-	}
-	r2 |= uint32(a[7])
-	return r, r2
+func ui16tob(a uint16) []byte {
+	b := make([]byte, 2)
+	b[1] = byte(a)
+	b[0] = byte(a >> 8)
+	return b
 }
 
-func convertToArray(a uint32, arr *[4]byte) {
-	arr[3] = byte(a)
-	arr[2] = byte(a >> 8)
-	arr[1] = byte(a >> 16)
-	arr[0] = byte(a >> 24)
+func btoui16(b []byte) (a uint16, err error) {
+	a = uint16(b[0])
+	a <<= 8
+	a |= uint16(b[1])
+	if len(b) > 2 {
+		err = &ByteError{}
+	}
+	return
 }
+
+type ByteError struct {
+}
+
+func (b *ByteError) Error() string { return "Slice length is not correct" }
