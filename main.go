@@ -117,7 +117,7 @@ func main() {
 			_, _ = b.Send(m.Sender, "Cannot process the photo")
 		}
 
-		p := &tb.Photo{File: tb.FromDisk("changed.jpg")}
+		p := &tb.Photo{File: tb.FromDisk("changed.jpg"), Caption: "Key: " + fmt.Sprintf("%x", i)}
 		_, _ = b.Send(m.Sender, p)
 	})
 
