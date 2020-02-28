@@ -108,7 +108,8 @@ func main() {
 				})
 			}
 		}
-		outFile, err := os.Create("changed.jpg")
+		keyFile := fmt.Sprintf("%x", key)
+		outFile, err := os.Create(keyFile+".jpg")
 
 		defer outFile.Close()
 		png.Encode(outFile, mod)
@@ -117,8 +118,9 @@ func main() {
 			_, _ = b.Send(m.Sender, "Cannot process the photo")
 		}
 
-		p := &tb.Photo{File: tb.FromDisk("changed.jpg"), Caption: "Key: " + fmt.Sprintf("%x", i)}
+		p := &tb.Photo{File: tb.FromDisk(keyFile+".jpg"), Caption: "Key: "+keyFile}
 		_, _ = b.Send(m.Sender, p)
+		os.Remove(keyFile+".jpg")
 	})
 
 	b.Start()
