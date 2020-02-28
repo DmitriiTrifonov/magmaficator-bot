@@ -7,7 +7,6 @@ import (
 	"image"
 	"image/color"
 	"image/jpeg"
-	"image/png"
 	"log"
 	"net/http"
 	"os"
@@ -104,25 +103,25 @@ func main() {
 					R: uint16(r),
 					G: uint16(newG * g),
 					B: uint16(newB * b),
-					A: 65535,
+					A: uint16(a),
 				})
 			}
 		}
 		keyFile := fmt.Sprintf("%x", key)
-		outFile, err := os.Create("changed.jpg")
-		log.Println("File created:", outFile)
+		outFile, err := os.Create(keyFile + ".jpg")
+		log.Println("File created:", keyFile+".jpg")
 
-		png.Encode(outFile, mod)
+		err = jpeg.Encode(outFile, mod, nil)
 
 		if err != nil {
 			_, _ = b.Send(m.Sender, "Cannot process the photo")
 		}
 
-		p := &tb.Photo{File: tb.FromDisk("changed.jpg"), Caption: keyFile}
+		p := &tb.Photo{File: tb.FromDisk(keyFile + ".jpg"), Caption: keyFile}
 		_, _ = b.Send(m.Sender, p)
 		outFile.Close()
-		//os.Remove("changed.jpg")
-		//log.Println("File deleted:", keyFile+".jpg")
+		os.Remove(keyFile + ".jpg")
+		log.Println("File deleted:", keyFile+".jpg")
 	})
 
 	b.Start()

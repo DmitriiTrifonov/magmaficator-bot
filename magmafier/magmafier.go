@@ -1,6 +1,7 @@
 package magmafier
 
 import (
+	"encoding/hex"
 	"math/rand"
 	"time"
 )
@@ -11,7 +12,7 @@ func MakeKeyFromString(s string) []byte {
 	if s == "" {
 		_, _ = rand.Read(b)
 	} else {
-		b = []byte(s)
+		b, _ = hex.DecodeString(s)
 	}
 	if len(b) < 32 {
 		rest := make([]byte, 32-len(b))
