@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/DmitriiTrifonov/magmafier-bot/magmafier"
 	tb "gopkg.in/tucnak/telebot.v2"
 	"image"
@@ -77,17 +76,16 @@ func main() {
 				convertToArray(r, &rArr)
 				var gArr [4]byte
 				convertToArray(g, &gArr)
-				
+
 				rgCipher := make([]byte, 0)
 				rgCipher = append(rgCipher, rArr[:]...)
 				rgCipher = append(rgCipher, gArr[:]...)
-
 
 				var bArr [4]byte
 				convertToArray(b, &bArr)
 				var aArr [4]byte
 				convertToArray(a, &aArr)
-				
+
 				baCipher := make([]byte, 0)
 				baCipher = append(baCipher, bArr[:]...)
 				baCipher = append(baCipher, aArr[:]...)
@@ -109,12 +107,11 @@ func main() {
 				})
 			}
 		}
-		keyFile := fmt.Sprintf("%x", key)
+		//keyFile := fmt.Sprintf("%x", key)
 		outFile, err := os.Create("changed.jpg")
 		log.Println("File created:", outFile)
-		
+
 		png.Encode(outFile, mod)
-		
 
 		if err != nil {
 			_, _ = b.Send(m.Sender, "Cannot process the photo")
@@ -123,8 +120,8 @@ func main() {
 		p := &tb.Photo{File: tb.FromDisk("changed.jpg"), Caption: string(key)}
 		_, _ = b.Send(m.Sender, p)
 		outFile.Close()
-		os.Remove("changed.jpg")
-		log.Println("File deleted:", keyFile+".jpg")
+		//os.Remove("changed.jpg")
+		//log.Println("File deleted:", keyFile+".jpg")
 	})
 
 	b.Start()
