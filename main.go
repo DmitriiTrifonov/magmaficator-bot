@@ -53,8 +53,10 @@ func main() {
 	b.Handle(tb.OnPhoto, func(m *tb.Message) {
 		mgm := magmafier.Magma{}
 		caption := m.Caption
-		log.Println(caption)
-		mgm.SetKey(magmafier.MakeKeyFromString(caption))
+		log.Println("Caption:", caption)
+		key := magmafier.MakeKeyFromString(caption)
+		log.Println("Key:", key)
+		mgm.SetKey(key)
 		photoUrl := m.Photo.File.FileID
 		url, err := b.FileURLByID(photoUrl)
 		log.Println(url)
