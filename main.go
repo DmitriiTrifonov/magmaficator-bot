@@ -10,7 +10,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"sync"
 )
 
 func main() {
@@ -67,10 +66,7 @@ func main() {
 		y := img.Bounds().Dy()
 		mod := image.NewRGBA(image.Rect(0, 0, x, y))
 		for i := 0; i < x; i++ {
-			wait := new(sync.WaitGroup)
 			for j := 0; j < y; j++ {
-				wait.Add(1)
-				go func(k int) {
 				c := img.At(i, j)
 				r, g, b, a := c.RGBA()
 
@@ -108,8 +104,6 @@ func main() {
 					B: uint16(newB * b),
 					A: 65535,
 				})
-				}(j)
-				wait.Wait()
 			}
 		}
 		outFile, err := os.Create("changed.jpg")
