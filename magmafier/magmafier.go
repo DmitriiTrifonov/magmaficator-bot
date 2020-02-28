@@ -10,8 +10,9 @@ func MakeKeyFromString(s string) []byte {
 	b := make([]byte, 32)
 	if s == "" {
 		_, _ = rand.Read(b)
+	} else {
+		b = []byte(s)
 	}
-	b = []byte(s)
 	if len(b) < 32 {
 		rest := make([]byte, 32-len(b))
 		b = append(b, rest...)
