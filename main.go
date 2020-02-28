@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/DmitriiTrifonov/magmafier-bot/ctr"
 	"github.com/DmitriiTrifonov/magmafier-bot/magmafier"
 	tb "gopkg.in/tucnak/telebot.v2"
 	"image"
