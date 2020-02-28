@@ -12,6 +12,7 @@ func MakeKeyFromString(s string) []byte {
 	if s == "" {
 		_, _ = rand.Read(b)
 	} else {
+		var err error
 		b, err = hex.DecodeString(s)
 		if err != nil {
 			b = []byte(s)
