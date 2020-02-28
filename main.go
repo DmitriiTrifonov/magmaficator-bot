@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/DmitriiTrifonov/magmafier-bot/magmafier"
 	tb "gopkg.in/tucnak/telebot.v2"
 	"image"
@@ -107,7 +108,7 @@ func main() {
 				})
 			}
 		}
-		//keyFile := fmt.Sprintf("%x", key)
+		keyFile := fmt.Sprintf("%x", key)
 		outFile, err := os.Create("changed.jpg")
 		log.Println("File created:", outFile)
 
@@ -117,7 +118,7 @@ func main() {
 			_, _ = b.Send(m.Sender, "Cannot process the photo")
 		}
 
-		p := &tb.Photo{File: tb.FromDisk("changed.jpg")}
+		p := &tb.Photo{File: tb.FromDisk("changed.jpg"), Caption: keyFile}
 		_, _ = b.Send(m.Sender, p)
 		outFile.Close()
 		//os.Remove("changed.jpg")
