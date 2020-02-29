@@ -60,7 +60,7 @@ func main() {
 		log.Println("Key:", key)
 		mgm.SetKey(key)
 		mgm.SetSubKeys()
-		photoUrl := m.Photo.File.FileID
+		photoUrl := m.Document.File.FileID
 		url, err := b.FileURLByID(photoUrl)
 		log.Println(url)
 		resp, err := http.Get(url)
