@@ -88,11 +88,11 @@ func main() {
 				block = append(block, gb...)
 				block = append(block, bb...)
 
-				cipher := ctr.CTRCrypt(block, counter, &mgm)
+				//cipher := ctr.CTRCrypt(block, counter, &mgm)
 
-				newR16, _ := btoui16(cipher[0:2])
-				newG16, _ := btoui16(cipher[2:4])
-				newB16, _ := btoui16(cipher[4:6])
+				newR16, _ := btoui16(block[0:2])
+				newG16, _ := btoui16(block[2:4])
+				newB16, _ := btoui16(block[4:6])
 
 				mod.Set(i, j, color.RGBA64{
 					R: newR16,
