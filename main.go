@@ -60,6 +60,7 @@ func main() {
 		log.Println("Caption:", caption)
 		if caption == "" {
 			name := m.Document.FileName
+			log.Println(name)
 			name = strings.Replace(name, ".JPG", "", -1)
 			name = strings.Replace(name, ".jpg", "", -1)
 			name = strings.Replace(name, ".jpeg", "", -1)
@@ -75,6 +76,10 @@ func main() {
 		log.Println(url)
 		resp, err := http.Get(url)
 		log.Println(resp.Body)
+		if resp.Body == nil {
+			_, _ = b.Send(m.Sender, "Cannot process the photo")
+			return
+		}
 		img, format, err := image.Decode(resp.Body)
 		if err != nil {
 			_, _ = b.Send(m.Sender, "Cannot process the photo")
