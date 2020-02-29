@@ -8,6 +8,7 @@ import (
 	"image"
 	"image/color"
 	"image/jpeg"
+	"image/png"
 	"log"
 	"net/http"
 	"os"
@@ -85,21 +86,17 @@ func main() {
 				bb := ui16tob(b16)
 
 				block := make([]byte, 0)
-				block = append(block, rb...)
-				block = append(block, gb...)
-				block = append(block, bb...)
+				block = append(block, rb[0:1]...)
+				block = append(block, gb[0:1]...)
+				block = append(block, bb[0:1]...)
 
 				cipher := ctr.CTRCrypt(block, counter, &mgm)
 
-				newR16, _ := btoui16(cipher[0:2])
-				newG16, _ := btoui16(cipher[2:4])
-				newB16, _ := btoui16(cipher[4:6])
-
-				mod.Set(i, j, color.RGBA64{
-					R: newR16,
-					G: newG16,
-					B: newB16,
-					A: 65535,
+				mod.Set(i, j, color.RGBA{
+					R: cipher[0],
+					G: cipher[1],
+					B: cipher[2],
+					A: 255,
 				})
 			}
 		}
@@ -107,7 +104,7 @@ func main() {
 		outFile, err := os.Create(keyFile + ".jpg")
 		log.Println("File created:", keyFile+".jpg")
 
-		err = jpeg.Encode(outFile, mod, &jpeg.Options{Quality: 100})
+		err = png.Encode(outFile, mod)
 
 		if err != nil {
 			_, _ = b.Send(m.Sender, "Cannot process the photo")
