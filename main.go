@@ -75,11 +75,11 @@ func main() {
 		url, err := b.FileURLByID(photoUrl)
 		log.Println(url)
 		resp, err := http.Get(url)
-		log.Println(resp.Body)
-		if resp.Body == nil {
+		if err != nil {
 			_, _ = b.Send(m.Sender, "Cannot process the photo")
 			return
 		}
+		log.Println(resp.Body)
 		img, format, err := image.Decode(resp.Body)
 		if err != nil {
 			_, _ = b.Send(m.Sender, "Cannot process the photo")
