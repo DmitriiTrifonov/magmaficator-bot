@@ -20,6 +20,7 @@ func MakeKeyFromString(s string) []byte {
 	}
 	if len(b) < 32 {
 		rest := make([]byte, 32-len(b))
+		_, _ = rand.Read(rest)
 		b = append(b, rest...)
 	}
 	if len(b) > 32 {

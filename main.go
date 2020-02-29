@@ -68,8 +68,8 @@ func main() {
 		x := img.Bounds().Dx()
 		y := img.Bounds().Dy()
 		mod := image.NewRGBA(image.Rect(0, 0, x, y))
-		counter := make([]byte, 8)
-		copy(counter, ctr.Vector)
+		counter := make([]byte, 0)
+		counter = append(counter, key[24:32]...)
 		for i := 0; i < x; i++ {
 			for j := 0; j < y; j++ {
 				col := img.At(i, j)
@@ -88,11 +88,11 @@ func main() {
 				block = append(block, gb...)
 				block = append(block, bb...)
 
-				//cipher := ctr.CTRCrypt(block, counter, &mgm)
+				cipher := ctr.CTRCrypt(block, counter, &mgm)
 
-				newR16, _ := btoui16(block[0:2])
-				newG16, _ := btoui16(block[2:4])
-				newB16, _ := btoui16(block[4:6])
+				newR16, _ := btoui16(cipher[0:2])
+				newG16, _ := btoui16(cipher[2:4])
+				newB16, _ := btoui16(cipher[4:6])
 
 				mod.Set(i, j, color.RGBA64{
 					R: newR16,
@@ -106,7 +106,7 @@ func main() {
 		outFile, err := os.Create(keyFile + ".jpg")
 		log.Println("File created:", keyFile+".jpg")
 
-		err = jpeg.Encode(outFile, mod, nil)
+		err = jpeg.Encode(outFile, mod, &jpeg.Options{Quality: 100})
 
 		if err != nil {
 			_, _ = b.Send(m.Sender, "Cannot process the photo")
