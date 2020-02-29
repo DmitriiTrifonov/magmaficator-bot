@@ -58,6 +58,7 @@ func main() {
 		key := magmafier.MakeKeyFromString(caption)
 		log.Println("Key:", key)
 		mgm.SetKey(key)
+		mgm.SetSubKeys()
 		photoUrl := m.Photo.File.FileID
 		url, err := b.FileURLByID(photoUrl)
 		log.Println(url)
