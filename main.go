@@ -13,6 +13,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -57,6 +58,14 @@ func main() {
 		mgm := magmafier.Magma{}
 		caption := m.Caption
 		log.Println("Caption:", caption)
+		if caption == "" {
+			name := m.Document.FileName
+			name = strings.Replace(name, ".JPG", "", -1)
+			name = strings.Replace(name, ".jpg", "", -1)
+			name = strings.Replace(name, ".jpeg", "", -1)
+			name = strings.Replace(name, ".png", "", -1)
+			caption = name
+		}
 		key := magmafier.MakeKeyFromString(caption)
 		log.Println("Key:", key)
 		mgm.SetKey(key)
@@ -67,6 +76,10 @@ func main() {
 		resp, err := http.Get(url)
 		log.Println(resp.Body)
 		img, format, err := image.Decode(resp.Body)
+		if err != nil {
+			_, _ = b.Send(m.Sender, "Cannot process the photo")
+			return
+		}
 		log.Println("image format is", format)
 		err = resp.Body.Close()
 		x := img.Bounds().Dx()
