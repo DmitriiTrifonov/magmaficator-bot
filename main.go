@@ -7,8 +7,8 @@ import (
 	tb "gopkg.in/tucnak/telebot.v2"
 	"image"
 	"image/color"
-	"image/jpeg"
-	"image/png"
+	_ "image/jpeg"
+	_ "image/png"
 	"log"
 	"net/http"
 	"os"
@@ -65,7 +65,8 @@ func main() {
 		log.Println(url)
 		resp, err := http.Get(url)
 		log.Println(resp.Body)
-		img, err := jpeg.Decode(resp.Body)
+		img, format, err := image.Decode(resp.Body)
+		log.Println("image format is", format)
 		err = resp.Body.Close()
 		x := img.Bounds().Dx()
 		y := img.Bounds().Dy()
