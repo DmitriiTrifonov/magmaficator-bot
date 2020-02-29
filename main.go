@@ -52,7 +52,7 @@ func main() {
 		_, _ = b.Send(m.Sender, message)
 	})
 
-	b.Handle(tb.OnPhoto, func(m *tb.Message) {
+	b.Handle(tb.OnDocument, func(m *tb.Message) {
 		mgm := magmafier.Magma{}
 		caption := m.Caption
 		log.Println("Caption:", caption)
@@ -110,8 +110,7 @@ func main() {
 			_, _ = b.Send(m.Sender, "Cannot process the photo")
 		}
 
-		p := &tb.Document{File: tb.FromDisk(keyFile + ".jpg"), Caption: keyFile,
-			Thumbnail: &tb.Photo{File: tb.FromDisk(keyFile + ".jpg")}, FileName: keyFile + ".jpg"}
+		p := &tb.Document{File: tb.FromDisk(keyFile + ".jpg"), Caption: keyFile, FileName: keyFile + ".jpg"}
 		_, _ = b.Send(m.Sender, p)
 		outFile.Close()
 		os.Remove(keyFile + ".jpg")
