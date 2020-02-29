@@ -110,9 +110,8 @@ func main() {
 			_, _ = b.Send(m.Sender, "Cannot process the photo")
 		}
 
-		p := tb.FromDisk(keyFile + ".jpg")
+		p := &tb.Document{File: tb.FromDisk(keyFile + ".jpg"), Caption: keyFile, Thumbnail: &tb.Photo{File: tb.FromDisk(keyFile + ".jpg")}}
 		_, _ = b.Send(m.Sender, p)
-		_, _ = b.Send(m.Sender, keyFile)
 		outFile.Close()
 		os.Remove(keyFile + ".jpg")
 		log.Println("File deleted:", keyFile+".jpg")
