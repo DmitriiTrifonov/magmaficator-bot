@@ -136,6 +136,156 @@ func main() {
 		})
 	})
 
+	b.Handle(tb.OnDocument, func(m *tb.Message) {
+		mgm := magmafier.Magma{}
+		caption := m.Caption
+		log.Println("Caption:", caption)
+		key := magmafier.MakeKeyFromString(caption)
+		log.Println("Key:", key)
+		mgm.SetKey(key)
+		mgm.SetSubKeys()
+		photoUrl := m.Document.File.FileID
+		url, err := b.FileURLByID(photoUrl)
+		log.Println(url)
+		resp, err := http.Get(url)
+		if err != nil {
+			_, _ = b.Send(m.Sender, "Cannot process the photo")
+			return
+		}
+		log.Println(resp.Body)
+		img, format, err := image.Decode(resp.Body)
+		if err != nil {
+			_, _ = b.Send(m.Sender, "Cannot process the photo")
+			return
+		}
+		log.Println("image format is", format)
+		err = resp.Body.Close()
+		x := img.Bounds().Dx()
+		y := img.Bounds().Dy()
+		mod := image.NewRGBA(image.Rect(0, 0, x, y))
+		counter := make([]byte, 0)
+		counter = append(counter, key[24:32]...)
+		for i := 0; i < x; i++ {
+			for j := 0; j < y; j++ {
+				col := img.At(i, j)
+				r, g, b, _ := col.RGBA()
+
+				r16 := uint16(r)
+				g16 := uint16(g)
+				b16 := uint16(b)
+
+				rb := ui16tob(r16)
+				gb := ui16tob(g16)
+				bb := ui16tob(b16)
+
+				block := make([]byte, 0)
+				block = append(block, rb[0:1]...)
+				block = append(block, gb[0:1]...)
+				block = append(block, bb[0:1]...)
+
+				cipher := ctr.CTRCrypt(block, counter, &mgm)
+
+				mod.Set(i, j, color.RGBA{
+					R: cipher[0],
+					G: cipher[1],
+					B: cipher[2],
+					A: 255,
+				})
+			}
+		}
+		keyFile := fmt.Sprintf("%x", key)
+		outFile, err := os.Create(keyFile + ".jpg")
+		log.Println("File created:", keyFile+".jpg")
+
+		err = png.Encode(outFile, mod)
+
+		if err != nil {
+			_, _ = b.Send(m.Sender, "Cannot process the photo")
+		}
+
+		p := &tb.Document{File: tb.FromDisk(keyFile + ".jpg"), Caption: keyFile, FileName: keyFile + ".jpg"}
+		_, _ = b.Send(m.Sender, p)
+		outFile.Close()
+		os.Remove(keyFile + ".jpg")
+		log.Println("File deleted:", keyFile+".jpg")
+
+	})
+
+	b.Handle(tb.OnPhoto, func(m *tb.Message) {
+		mgm := magmafier.Magma{}
+		caption := m.Caption
+		log.Println("Caption:", caption)
+		key := magmafier.MakeKeyFromString(caption)
+		log.Println("Key:", key)
+		mgm.SetKey(key)
+		mgm.SetSubKeys()
+		photoUrl := m.Photo.File.FileID
+		url, err := b.FileURLByID(photoUrl)
+		log.Println(url)
+		resp, err := http.Get(url)
+		if err != nil {
+			_, _ = b.Send(m.Sender, "Cannot process the photo")
+			return
+		}
+		log.Println(resp.Body)
+		img, format, err := image.Decode(resp.Body)
+		if err != nil {
+			_, _ = b.Send(m.Sender, "Cannot process the photo")
+			return
+		}
+		log.Println("image format is", format)
+		err = resp.Body.Close()
+		x := img.Bounds().Dx()
+		y := img.Bounds().Dy()
+		mod := image.NewRGBA(image.Rect(0, 0, x, y))
+		counter := make([]byte, 0)
+		counter = append(counter, key[24:32]...)
+		for i := 0; i < x; i++ {
+			for j := 0; j < y; j++ {
+				col := img.At(i, j)
+				r, g, b, _ := col.RGBA()
+
+				r16 := uint16(r)
+				g16 := uint16(g)
+				b16 := uint16(b)
+
+				rb := ui16tob(r16)
+				gb := ui16tob(g16)
+				bb := ui16tob(b16)
+
+				block := make([]byte, 0)
+				block = append(block, rb[0:1]...)
+				block = append(block, gb[0:1]...)
+				block = append(block, bb[0:1]...)
+
+				cipher := ctr.CTRCrypt(block, counter, &mgm)
+
+				mod.Set(i, j, color.RGBA{
+					R: cipher[0],
+					G: cipher[1],
+					B: cipher[2],
+					A: 255,
+				})
+			}
+		}
+		keyFile := fmt.Sprintf("%x", key)
+		outFile, err := os.Create(keyFile + ".jpg")
+		log.Println("File created:", keyFile+".jpg")
+
+		err = png.Encode(outFile, mod)
+
+		if err != nil {
+			_, _ = b.Send(m.Sender, "Cannot process the photo")
+		}
+
+		p := &tb.Document{File: tb.FromDisk(keyFile + ".jpg"), Caption: keyFile, FileName: keyFile + ".jpg"}
+		_, _ = b.Send(m.Sender, p)
+		outFile.Close()
+		os.Remove(keyFile + ".jpg")
+		log.Println("File deleted:", keyFile+".jpg")
+
+	})
+
 	b.Start()
 
 }
