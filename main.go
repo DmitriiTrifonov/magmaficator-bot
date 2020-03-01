@@ -118,8 +118,8 @@ func main() {
 				}
 			}
 			keyFile := fmt.Sprintf("%x", key)
-			outFile, err := os.Create(keyFile + ".jpg")
-			log.Println("File created:", keyFile+".jpg")
+			outFile, err := os.Create(keyFile + ".png")
+			log.Println("File created:", keyFile+".png")
 
 			err = png.Encode(outFile, mod)
 
@@ -127,11 +127,11 @@ func main() {
 				_, _ = b.Send(m.Sender, "Cannot process the photo")
 			}
 
-			p := &tb.Document{File: tb.FromDisk(keyFile + ".jpg"), Caption: keyFile, FileName: keyFile + ".jpg"}
+			p := &tb.Document{File: tb.FromDisk(keyFile + ".png"), Caption: keyFile, FileName: keyFile + ".png"}
 			_, _ = b.Send(m.Sender, p)
 			outFile.Close()
-			os.Remove(keyFile + ".jpg")
-			log.Println("File deleted:", keyFile+".jpg")
+			os.Remove(keyFile + ".png")
+			log.Println("File deleted:", keyFile+".png")
 
 		})
 	})
@@ -194,8 +194,8 @@ func main() {
 			}
 		}
 		keyFile := fmt.Sprintf("%x", key)
-		outFile, err := os.Create(keyFile + ".jpg")
-		log.Println("File created:", keyFile+".jpg")
+		outFile, err := os.Create(keyFile + ".png")
+		log.Println("File created:", keyFile+".png")
 
 		err = png.Encode(outFile, mod)
 
@@ -203,11 +203,11 @@ func main() {
 			_, _ = b.Send(m.Sender, "Cannot process the photo")
 		}
 
-		p := &tb.Document{File: tb.FromDisk(keyFile + ".jpg"), Caption: keyFile, FileName: keyFile + ".jpg"}
+		p := &tb.Document{File: tb.FromDisk(keyFile + ".png"), Caption: keyFile, FileName: keyFile + ".png"}
 		_, _ = b.Send(m.Sender, p)
 		outFile.Close()
-		os.Remove(keyFile + ".jpg")
-		log.Println("File deleted:", keyFile+".jpg")
+		os.Remove(keyFile + ".png")
+		log.Println("File deleted:", keyFile+".png")
 
 	})
 
@@ -269,8 +269,8 @@ func main() {
 			}
 		}
 		keyFile := fmt.Sprintf("%x", key)
-		outFile, err := os.Create(keyFile + ".jpg")
-		log.Println("File created:", keyFile+".jpg")
+		outFile, err := os.Create(keyFile + ".png")
+		log.Println("File created:", keyFile+".png")
 
 		err = png.Encode(outFile, mod)
 
@@ -278,11 +278,11 @@ func main() {
 			_, _ = b.Send(m.Sender, "Cannot process the photo")
 		}
 
-		p := &tb.Document{File: tb.FromDisk(keyFile + ".jpg"), Caption: keyFile, FileName: keyFile + ".jpg"}
+		p := &tb.Document{File: tb.FromDisk(keyFile + ".png"), Caption: keyFile, FileName: keyFile + ".png"}
 		_, _ = b.Send(m.Sender, p)
 		outFile.Close()
-		os.Remove(keyFile + ".jpg")
-		log.Println("File deleted:", keyFile+".jpg")
+		os.Remove(keyFile + ".png")
+		log.Println("File deleted:", keyFile+".png")
 
 	})
 
