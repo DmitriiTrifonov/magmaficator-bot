@@ -37,8 +37,11 @@ func main() {
 
 	message := "This is the Magmafier bot.\n" +
 		"It uses block cipher \"Magma\" from GOST 34.12-2018.\n" +
-		"It's only ciphering green and blue channels for entertainment purposes.\n" +
-		"If you want to set a custom key please add a message to your photo\n" +
+		"It ciphers all three channels using CTR mode for entertainment purposes.\n" +
+		"To decipher a photo you should sent to bot a ciphered PNG file as a document.\n" +
+		"To set a key simply write it to bot. It's a temporal operation.\n" +
+		"After some time the key will be flushed.\n" +
+		"If you want to set a custom key please add a caption to your photo\n" +
 		"Have fun! This was a theme for my thesis."
 
 	b.Handle("/start", func(m *tb.Message) {
